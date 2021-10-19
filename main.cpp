@@ -19,7 +19,7 @@
 #define VERDE  0.0, 0.5, 0.0, 1.0
 #define CINZA    0.5,0.5, 0.5, 1.0
 
-#define PASSO 0.5     //MOSTRA O QUANTO O QUADRADO SE MOVIMENTA NO PLANO CARTESIANO
+#define PASSO 1     //MOSTRA O QUANTO O QUADRADO SE MOVIMENTA NO PLANO CARTESIANO
 #define ESPESSURA 3 //ESPESSURA DA PAREDE DO LABIRINTO
 
 GLfloat ro,go,bo; //RGB DO QUADRADRO
@@ -27,10 +27,22 @@ GLfloat rl,gl,bl; //RGB DAS PAREDES DO LABIRINTO
 
 int max_verticais = 14;
 int max_horizontais = 18;
+int vetx[68] = {0,10,10,0,0,20,20,0,20,50,50,20,20,50,50,20,60,90,90,60,100,120,120,
+                100,60,90,90,60,0,20,20,0,20,50,50,20,0,10,10,0,0,10,10,0,20,90,90,
+                20,60,90,90,60,60,120,120,60,100,120,120,100,100,120,120,100,100,120,120,100};
+int vety[68] = {0,0,20,20,30,30,45,45,10,10,0,0,45,45,20,20,10,10,0,0,20,20,0,0,65,
+                65,20,20,55,55,70,70,55,55,90,90,80,80,100,100,120,120,110,110,110,
+                110,100,100,100,100,75,75,65,65,55,55,45,45,30,30,120,120,110,110,100,100,75,75};
 
 int vidas = 3;
 int cont =0;            //VARIAVEL USADA PARA CONTROLAR A MUDANÇA DE COR DO FUNDO DO LABIRINTO
 char winLose[15] = " "; //MENSAGEM DE VITORIA/DERROTA
+
+float Pessoa[4][2]    =  {{2,23},
+                        {8,23},
+                        {8,26},
+                        {2, 26}};
+
 
 
 
@@ -66,140 +78,33 @@ void Inicializa (void){
     printf("Voce comeca com %d vidas.\n", vidas);
     glClearColor(CINZA);
     glMatrixMode(GL_PROJECTION);
-    gluOrtho2D(0,120,0,120);
+    gluOrtho2D(0,120,0,135);
     ro=0.04; go=0.75; bo=0.0;
     rl=0; gl=0; bl=0;
 
 }
-
 void Desenha(void){
     glClear(GL_COLOR_BUFFER_BIT);
-
-    //DESENHA UM QUADRADO DENTRO DO LABIRINTO
     glColor3f(ro, go, bo);
-    //figura 1
+    //QUARTEIRÕES
+    for(int i=0; i<68; i=i+4){
+        glBegin(GL_QUADS);
+            glVertex2f(vetx[i],vety[i]); // A(2,19)
+            glVertex2f(vetx[i+1],vety[i+1]); // B(12,19)
+            glVertex2f(vetx[i+2],vety[i+2]); // C(12,29)
+            glVertex2f(vetx[i+3],vety[i+3]); // D(2,29)
+        glEnd();
+
+    }
+    glColor3f(0.3,0.3 ,0.3 );
     glBegin(GL_QUADS);
-        glVertex2f(0,0); // A(2,19)
-        glVertex2f(10,0); // B(12,19)
-        glVertex2f(10,20); // C(12,29)
-        glVertex2f(0,20); // D(2,29)
+        glVertex2f(0,135); // A(2,19)
+        glVertex2f(120,135); // B(12,19)
+        glVertex2f(120,120); // C(12,29)
+        glVertex2f(0, 120); // D(2,29)
     glEnd();
 
-    //figura 2
-    glBegin(GL_QUADS);
-        glVertex2f(0,30); // A(2,19)
-        glVertex2f(20,30); // B(12,19)
-        glVertex2f(20,45); // C(12,29)
-        glVertex2f(0,45); // D(2,29)
-    glEnd();
-    //figura 3
-    glBegin(GL_QUADS);
-        glVertex2f(20,10); // A(2,19)
-        glVertex2f(50,10); // B(12,19)
-        glVertex2f(50,0); // C(12,29)
-        glVertex2f(20,0); // D(2,29)
-    glEnd();
-   //figura 4
-    glBegin(GL_QUADS);
-        glVertex2f(20,45); // A(2,19)
-        glVertex2f(50,45); // B(12,19)
-        glVertex2f(50,20); // C(12,29)
-        glVertex2f(20,20); // D(2,29)
-    glEnd();
-    glBegin(GL_QUADS);
-        glVertex2f(60,10); // A(2,19)
-        glVertex2f(90,10); // B(12,19)
-        glVertex2f(90,0); // C(12,29)
-        glVertex2f(60,0); // D(2,29)
-    glEnd();
-    glBegin(GL_QUADS);
-        glVertex2f(100,20); // A(2,19)
-        glVertex2f(120,20); // B(12,19)
-        glVertex2f(120,0); // C(12,29)
-        glVertex2f(100,0); // D(2,29)
-    glEnd();
-
-    //figura 7
-    glBegin(GL_QUADS);
-        glVertex2f(60,65); // A(2,19)
-        glVertex2f(90,65); // B(12,19)
-        glVertex2f(90,20); // C(12,29)
-        glVertex2f(60,20); // D(2,29)
-    glEnd();
-    //figura 8
-    glBegin(GL_QUADS);
-        glVertex2f(0,55); // A(2,19)
-        glVertex2f(20,55); // B(12,19)
-        glVertex2f(20,70); // C(12,29)
-        glVertex2f(0,70); // D(2,29)
-    glEnd();
-    //figura 9
-    glBegin(GL_QUADS);
-        glVertex2f(20,55); // A(2,19)
-        glVertex2f(50,55); // B(12,19)
-        glVertex2f(50,90); // C(12,29)
-        glVertex2f(20,90); // D(2,29)
-    glEnd();
-
-     //figura 10
-    glBegin(GL_QUADS);
-        glVertex2f(0,80); // A(2,19)
-        glVertex2f(10,80); // B(12,19)
-        glVertex2f(10,100); // C(12,29)
-        glVertex2f(0,100); // D(2,29)
-    glEnd();
-    //figura 11
-    glBegin(GL_QUADS);
-        glVertex2f(0,120); // A(2,19)
-        glVertex2f(10,120); // B(12,19)
-        glVertex2f(10,110); // C(12,29)
-        glVertex2f(0,110); // D(2,29)
-    glEnd();
-
-    //figura 12
-    glBegin(GL_QUADS);
-        glVertex2f(20,110); // A(2,19)
-        glVertex2f(90,110); // B(12,19)
-        glVertex2f(90,100); // C(12,29)
-        glVertex2f(20,100); // D(2,29)
-    glEnd();
-    //figura 13
-    glBegin(GL_QUADS);
-        glVertex2f(60,100); // A(2,19)
-        glVertex2f(90,100); // B(12,19)
-        glVertex2f(90,75); // C(12,29)
-        glVertex2f(60,75); // D(2,29)
-    glEnd();
-    //figura 14
-     glBegin(GL_QUADS);
-        glVertex2f(60,65); // A(2,19)
-        glVertex2f(120,65); // B(12,19)
-        glVertex2f(120,55); // C(12,29)
-        glVertex2f(60,55); // D(2,29)
-    glEnd();
-    //figura 15
-     glBegin(GL_QUADS);
-        glVertex2f(100,45); // A(2,19)
-        glVertex2f(120,45); // B(12,19)
-        glVertex2f(120,30); // C(12,29)
-        glVertex2f(100, 30); // D(2,29)
-    glEnd();
-    //figura 16
-    glBegin(GL_QUADS);
-        glVertex2f(100,120); // A(2,19)
-        glVertex2f(120,120); // B(12,19)
-        glVertex2f(120,110); // C(12,29)
-        glVertex2f(100, 110); // D(2,29)
-    glEnd();
-    //figura 17
-    glBegin(GL_QUADS);
-        glVertex2f(100,100); // A(2,19)
-        glVertex2f(120,100); // B(12,19)
-        glVertex2f(120,75); // C(12,29)
-        glVertex2f(100, 75); // D(2,29)
-    glEnd();
-    //posto de vacinação
-    //posto 1
+     //posto 1
      glColor3f(0.0,1.0 ,2.5 );
     glBegin(GL_QUADS);
         glVertex2f(100,90); // A(2,19)
@@ -207,19 +112,31 @@ void Desenha(void){
         glVertex2f(105,80); // C(12,29)
         glVertex2f(100, 80); // D(2,29)
     glEnd();
-
-
-    // INSERE STRING VAZIA NO CANTO SUPERIOR DIREITO DO LABIRINTO
-     glColor3f(0.0f,0.0f,0.0f);
-     DesenhaTexto(winLose);
-     glutSwapBuffers();
+    //PESSOA
+    glColor3f(rl, gl, bl);
+    glBegin(GL_QUADS);
+        glVertex2f(Pessoa[0][0],Pessoa[0][1]);
+        glVertex2f(Pessoa[1][0],Pessoa[1][1]);
+        glVertex2f(Pessoa[2][0],Pessoa[2][1]);
+        glVertex2f(Pessoa[3][0],Pessoa[3][1]);
+    glEnd();
 
     glFlush();
+}
+bool vacinou(void){
+    if((Pessoa[1][0] >=105 && Pessoa[1][1]>=80 && Pessoa[1][0]<= 110  && Pessoa[1][1] <= 87))
+        return true;
+    return false;
 }
 
 bool colisaoVertical(void){
 
-        return true;
+    for (int i=0; i<68; i++){
+        if(Pessoa[0][1] > vety[i]){
+            return true;
+        }
+    }
+        return false;
 }
 
 bool colisaoHorizontal(void){
@@ -241,8 +158,46 @@ void teclado(unsigned char key, int x, int y){
 }
 
 void TecladoEspecial(int key, int x, int y){
+    switch(key){
+        case GLUT_KEY_UP:
+            for(int i= 0; i < 4; i++)
+                Pessoa[i][1]+=PASSO;
+                if(vacinou())
+                    printf("\Vacinou\n");
 
+        break;
+        case GLUT_KEY_DOWN:
 
+            strcpy(winLose, " ");
+            for(int i= 0; i < 4; i++)
+                Pessoa[i][1]-=PASSO;
+                if(vacinou())
+                    printf("\Vacinou\n");
+
+        break;
+        case GLUT_KEY_LEFT:
+            strcpy(winLose, " ");
+            if(Pessoa[0][0] < -5)
+            {
+                Pessoa[0][0]=120;
+                Pessoa[1][0]=126;
+                Pessoa[2][0]=126;
+                Pessoa[3][0]=120;
+            }
+            for(int i= 0; i < 4; i++)
+                Pessoa[i][0]-=PASSO;
+                if(vacinou())
+                    printf("\Vacinou\n");
+        break;
+        case GLUT_KEY_RIGHT:
+            strcpy(winLose, " ");
+            for(int i= 0; i < 4; i++)
+                Pessoa[i][0]+=PASSO;
+                if(vacinou())
+                    printf("\Vacinou\n");
+        break;
+    }
+    glutPostRedisplay();
 }
 
 void Mouse(int button, int state,int x, int y){
