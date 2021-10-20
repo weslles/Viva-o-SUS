@@ -13,14 +13,11 @@
 #include <gl/glut.h>
 #include <time.h>
 
-//CORES USADAS NO FUNDO DO LABIRINTO
-#define AZUL     0.25, 0.25, 0.5, 1.0
-#define VERMELHO 1.65, 0.0, 0.0, 1.0
-#define VERDE  0.0, 0.5, 0.0, 1.0
+//COR DA PISTA
 #define CINZA    0.5,0.5, 0.5, 1.0
 
 #define PASSO 1     //MOSTRA O QUANTO O QUADRADO SE MOVIMENTA NO PLANO CARTESIANO
-#define ESPESSURA 3 //ESPESSURA DA PAREDE DO LABIRINTO
+
 
 GLfloat ro,go,bo; //RGB DO QUADRADRO
 GLfloat rl,gl,bl; //RGB DAS PAREDES DO LABIRINTO
@@ -35,10 +32,14 @@ int vety[68] = {0,0,20,20,30,30,45,45,10,10,0,0,45,45,20,20,10,10,0,0,20,20,0,0,
                 110,100,100,100,100,75,75,65,65,55,55,45,45,30,30,120,120,110,110,100,100,75,75};
 
 int vidas = 3;
-int cont =0;            //VARIAVEL USADA PARA CONTROLAR A MUDANÇA DE COR DO FUNDO DO LABIRINTO
-char winLose[15] = " "; //MENSAGEM DE VITORIA/DERROTA
+int cont =0;            //VARIAVEL USADA PARA CONTROLAR A MUDAN�A DE COR DO FUNDO DO LABIRINTO
+char vacinado[15] = " "; //MENSAGEM DE VITORIA/DERROTA
 
 float Pessoa[4][2]    =  {{2,23},
+                        {8,23},
+                        {8,26},
+                        {2, 26}};
+float PessoaAux[4][2]    =  {{2,23},
                         {8,23},
                         {8,26},
                         {2, 26}};
@@ -55,6 +56,7 @@ void teclado(unsigned char , int , int );
 void TecladoEspecial(int , int , int );
 void Mouse(int , int ,int , int );
 void DesenhaTexto(char *);
+void criarMenu();
 
 int main(int argc, char *argv[]){
 
@@ -86,31 +88,31 @@ void Inicializa (void){
 void Desenha(void){
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(ro, go, bo);
-    //QUARTEIRÕES
+    //QUARTEIROES
     for(int i=0; i<68; i=i+4){
         glBegin(GL_QUADS);
-            glVertex2f(vetx[i],vety[i]); // A(2,19)
-            glVertex2f(vetx[i+1],vety[i+1]); // B(12,19)
-            glVertex2f(vetx[i+2],vety[i+2]); // C(12,29)
-            glVertex2f(vetx[i+3],vety[i+3]); // D(2,29)
+            glVertex2f(vetx[i],vety[i]);
+            glVertex2f(vetx[i+1],vety[i+1]); 
+            glVertex2f(vetx[i+2],vety[i+2]); 
+            glVertex2f(vetx[i+3],vety[i+3]); 
         glEnd();
 
     }
     glColor3f(0.3,0.3 ,0.3 );
     glBegin(GL_QUADS);
-        glVertex2f(0,135); // A(2,19)
-        glVertex2f(120,135); // B(12,19)
-        glVertex2f(120,120); // C(12,29)
-        glVertex2f(0, 120); // D(2,29)
+        glVertex2f(0,135);
+        glVertex2f(120,135);
+        glVertex2f(120,120);
+        glVertex2f(0, 120);
     glEnd();
 
      //posto 1
      glColor3f(0.0,1.0 ,2.5 );
     glBegin(GL_QUADS);
-        glVertex2f(100,90); // A(2,19)
-        glVertex2f(105,90); // B(12,19)
-        glVertex2f(105,80); // C(12,29)
-        glVertex2f(100, 80); // D(2,29)
+        glVertex2f(100,90);  
+        glVertex2f(105,90);  
+        glVertex2f(105,80);  
+        glVertex2f(100, 80); 
     glEnd();
     //PESSOA
     glColor3f(rl, gl, bl);
@@ -121,6 +123,11 @@ void Desenha(void){
         glVertex2f(Pessoa[3][0],Pessoa[3][1]);
     glEnd();
 
+    // INSERE STRING VAZIA NA MARGEM SUPERIOR
+     glColor3f(0.0f,0.0f,0.0f);
+     DesenhaTexto(vacinado);
+     glutSwapBuffers();
+
     glFlush();
 }
 bool vacinou(void){
@@ -129,73 +136,58 @@ bool vacinou(void){
     return false;
 }
 
-bool colisaoVertical(void){
-
-    for (int i=0; i<68; i++){
-        if(Pessoa[0][1] > vety[i]){
-            return true;
-        }
-    }
-        return false;
-}
-
-bool colisaoHorizontal(void){
-
-        return true;
-}
-
 void teclado(unsigned char key, int x, int y){
     switch (key) {
-            case 27:
-                system("cls");
-                printf("\n-----------------------\n");
-                printf("SENTIREMOS SUA FALTA!!");
-                printf("\n-----------------------\n");
-                exit(0);
+            case 119:   //w (minusculo)
+                for(int i= 0; i < 4; i++)
+                Pessoa[i][1]+=PASSO;
                 break;
+            case 115: //s (minusculo)
+                for(int i= 0; i < 4; i++)
+                Pessoa[i][1]-=PASSO;
+
+                break;
+            case 97: //a (minusculo)
+                if(Pessoa[0][0] < -5)
+                {
+                    Pessoa[0][0]=120;
+                    Pessoa[1][0]=126;
+                    Pessoa[2][0]=126;
+                    Pessoa[3][0]=120;
+                }
+                for(int i= 0; i < 4; i++)
+                    Pessoa[i][0]-=PASSO;
+
+                break;
+            case 100: //d (minusculo)
+                for(int i= 0; i < 4; i++)
+                Pessoa[i][0]+=PASSO;
     }
     glutPostRedisplay();
 }
 
 void TecladoEspecial(int key, int x, int y){
     switch(key){
-        case GLUT_KEY_UP:
-            for(int i= 0; i < 4; i++)
-                Pessoa[i][1]+=PASSO;
-                if(vacinou())
-                    printf("\Vacinou\n");
-
-        break;
-        case GLUT_KEY_DOWN:
-
-            strcpy(winLose, " ");
-            for(int i= 0; i < 4; i++)
-                Pessoa[i][1]-=PASSO;
-                if(vacinou())
-                    printf("\Vacinou\n");
-
-        break;
-        case GLUT_KEY_LEFT:
-            strcpy(winLose, " ");
-            if(Pessoa[0][0] < -5)
-            {
-                Pessoa[0][0]=120;
-                Pessoa[1][0]=126;
-                Pessoa[2][0]=126;
-                Pessoa[3][0]=120;
+        case GLUT_KEY_END: // CONFIRMAÇÃO DE VACINAÇÃO
+            if(vacinou()){
+                printf("\nVacinou\n");
+                strcpy(vacinado, "Vacinou");
             }
-            for(int i= 0; i < 4; i++)
-                Pessoa[i][0]-=PASSO;
-                if(vacinou())
-                    printf("\Vacinou\n");
+
         break;
-        case GLUT_KEY_RIGHT:
-            strcpy(winLose, " ");
-            for(int i= 0; i < 4; i++)
-                Pessoa[i][0]+=PASSO;
-                if(vacinou())
-                    printf("\Vacinou\n");
+        case GLUT_KEY_HOME: // VOLTAR A POSIÇÃO INICIAL
+            for(int i=0; i<4; i++){
+                    for(int j=0; j<2;j++)
+                        Pessoa[i][j] = PessoaAux[i][j];
+                }
+                strcpy(vacinado, "");
+
         break;
+        case GLUT_KEY_F11: // SAIR DO JOGO
+            exit(0);
+
+        break;
+
     }
     glutPostRedisplay();
 }
@@ -203,35 +195,7 @@ void TecladoEspecial(int key, int x, int y){
 void Mouse(int button, int state,int x, int y){
     if(button == GLUT_LEFT_BUTTON){
         if(state == GLUT_DOWN){
-
-            //MUDAN�A DE COR DO OBJETO
-
-
-            //MUDAN�A DE COR DAS LINHAS DO LABIRINTO
-
-
-            //MUDAN�A DE COR DO FUNDO DO LABIRINTO
-            switch (cont){
-                case 0:
-
-                    cont++;
-                    break;
-                case 1:
-
-                    cont++;
-                    break;
-
-                case 2:
-
-                    cont++;
-                    break;
-
-                case 3:
-
-                    cont =0;
-                    break;
-
-               }
+            criarMenu();
             glutPostRedisplay();
         }
     }
@@ -239,10 +203,44 @@ void Mouse(int button, int state,int x, int y){
 
 void DesenhaTexto(char *string){
   	glPushMatrix();
-        // Posição no universo onde o texto será colocado
-        glRasterPos2f(70,125);
+        // Posicao no universo onde o texto sera colocado
+        glRasterPos2f(50,125);
         // Exibe caracter a caracter
         while(*string)
              glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,*string++);
 	glPopMatrix();
+}
+
+
+void menuCor(int op){
+    switch(op){
+        case 0:
+            ro=0;
+            go=0;
+            bo=0.5;
+            break;
+        case 1:
+            ro=0;
+            go=0.5;
+            bo=0;
+            break;
+    }
+    glutPostRedisplay();
+}
+
+void MenuPrincipal (int op){
+
+}
+void criarMenu(){
+    int menu, submenu;
+
+    submenu = glutCreateMenu(menuCor);
+    glutAddMenuEntry("Azul", 0);
+    glutAddMenuEntry("Verde", 1);
+
+
+    menu = glutCreateMenu(MenuPrincipal);
+    glutAddSubMenu("Cor do Quarteirao", submenu);
+
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
