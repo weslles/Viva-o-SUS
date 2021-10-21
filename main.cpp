@@ -3,7 +3,7 @@
     DISCIPLINA: COMPUTACAOO GRAFICA  TURMA: 2020.2
     PROFESSOR:  JORGE CAVALCANTE
     ALUNOS:     JOSE WESLLES
-                MATHEUS ADHONNAY
+                MATTHEUS ADHONNAY
                 RAYANNE CAROLINE
 */
 
@@ -19,7 +19,7 @@
 #define PASSO 1     //MOSTRA O QUANTO O QUADRADO SE MOVIMENTA NO PLANO CARTESIANO
 
 
-GLfloat ro,go,bo; //RGB DO QUARTEIRÃƒO
+GLfloat ro,go,bo; //RGB DO QUARTEIRÃO
 GLfloat rc,gc,bc; //RGB DO CORPO DA PESSOA
 
 int vetx[68] = {0,10,10,0,0,20,20,0,20,50,50,20,20,50,50,20,60,90,90,60,100,120,120,
@@ -30,7 +30,6 @@ int vety[68] = {0,0,20,20,30,30,45,45,10,10,0,0,45,45,20,20,10,10,0,0,20,20,0,0,
                 110,100,100,100,100,75,75,65,65,55,55,45,45,30,30,120,120,110,110,100,100,75,75};
 
 int vidas = 3;
-int cont =0;            //VARIAVEL USADA PARA CONTROLAR A MUDANï¿½A DE COR DO FUNDO DO LABIRINTO
 char vacinado[15] = " "; //MENSAGEM DE VITORIA/DERROTA
 char contVacinas[30] = "";
 int xc, yc, zc;
@@ -51,14 +50,11 @@ int a =80, b=87,c=105;
 
 void Inicializa(void);
 void Desenha(void);
-bool colisaoVertical(void);
-bool colisaoHorizontal(void);
 void teclado(unsigned char , int , int );
 void TecladoEspecial(int , int , int );
 void Mouse(int , int ,int , int );
 void DesenhaTexto(char *);
 void criarMenu();
-void cronometro();
 void textoVacinaRestante(char *);
 
 int main(int argc, char *argv[]){
@@ -82,10 +78,9 @@ int main(int argc, char *argv[]){
 void Inicializa (void){
 
     glClearColor(CINZA);
-    glMatrixMode(GL_PROJECTION);
     gluOrtho2D(0,120,0,135);
     ro=0.04; go=0.75; bo=0.0;
-    gc=0; gc=0; bc=0;
+    rc=0; gc=0; bc=0;
     strcpy(contVacinas, "Vacinas Restantes: 2");
     xc=0;
     yc=0;
@@ -135,6 +130,7 @@ void Desenha(void){
         glVertex2f(120,120);
         glVertex2f(0, 120);
     glEnd();
+
     glPushMatrix();
         glTranslatef(xc,yc,zc); //< or whatever your rotation is.
         desenhaPosto();
@@ -210,11 +206,12 @@ void teclado(unsigned char key, int x, int y){
     glutPostRedisplay();
 }
 
+int i=1;
+
 void TecladoEspecial(int key, int x, int y){
     switch(key){
-        case GLUT_KEY_END: // CONFIRMAÃ‡ÃƒO DE VACINAÃ‡ÃƒO
+        case GLUT_KEY_END: // CONFIRMAÇÃO DE VACINAÇÃO
             if(vacinou()){
-                printf("\nVacinou\n");
                 strcpy(vacinado, "Vacinou");
                 a=55;
                 b=62;
@@ -223,16 +220,28 @@ void TecladoEspecial(int key, int x, int y){
                 xc=-55;
                 yc=-25;
                 zc=0;
+                if(i==1){
+                    strcpy(contVacinas, "Vacinas Restantes: 1");
+                    i=0;
+                }
+                else{
+                    strcpy(vacinado, "Parabéns! 100% Imunizado");
+                    strcpy(contVacinas, "Vacinas Restantes: 0");
+                }
+
+
+
 
             }
 
         break;
-        case GLUT_KEY_HOME: // VOLTAR A POSIÃ‡ÃƒO INICIAL
+        case GLUT_KEY_HOME: // VOLTAR A POSIÇÃO INICIAL
             for(int i=0; i<4; i++){
                     for(int j=0; j<2;j++)
                         Pessoa[i][j] = PessoaAux[i][j];
                 }
                 strcpy(vacinado, "");
+
 
 
         break;
@@ -246,7 +255,7 @@ void TecladoEspecial(int key, int x, int y){
 }
 
 void Mouse(int button, int state,int x, int y){
-    if(button == GLUT_LEFT_BUTTON){
+    if(button == GLUT_RIGHT_BUTTON){
         if(state == GLUT_DOWN){
             criarMenu();
             glutPostRedisplay();
@@ -266,7 +275,7 @@ void DesenhaTexto(char *string){
 void textoVacinaRestante(char *string){
   	glPushMatrix();
         // Posicao no universo onde o texto sera colocado
-        glRasterPos2f(10,130);
+        glRasterPos2f(2,130);
         // Exibe caracter a caracter
         while(*string)
              glutBitmapCharacter(GLUT_BITMAP_9_BY_15,*string++);
