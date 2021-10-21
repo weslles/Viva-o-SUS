@@ -19,7 +19,7 @@
 #define PASSO 1     //MOSTRA O QUANTO O QUADRADO SE MOVIMENTA NO PLANO CARTESIANO
 
 
-GLfloat ro,go,bo; //RGB DO QUARTEIRÃO
+GLfloat ro,go,bo; //RGB DO QUARTEIRÃƒO
 GLfloat rc,gc,bc; //RGB DO CORPO DA PESSOA
 
 int vetx[68] = {0,10,10,0,0,20,20,0,20,50,50,20,20,50,50,20,60,90,90,60,100,120,120,
@@ -132,7 +132,7 @@ void Desenha(void){
     glEnd();
 
     glPushMatrix();
-        glTranslatef(xc,yc,zc); //< or whatever your rotation is.
+        glTranslatef(xc,yc,zc);
         desenhaPosto();
     glPopMatrix();
 
@@ -210,7 +210,7 @@ int i=1;
 
 void TecladoEspecial(int key, int x, int y){
     switch(key){
-        case GLUT_KEY_END: // CONFIRMAÇÃO DE VACINAÇÃO
+        case GLUT_KEY_END: // CONFIRMAÃ‡ÃƒO DE VACINAÃ‡ÃƒO
             if(vacinou()){
                 strcpy(vacinado, "Vacinou");
                 a=55;
@@ -225,7 +225,7 @@ void TecladoEspecial(int key, int x, int y){
                     i=0;
                 }
                 else{
-                    strcpy(vacinado, "Parabéns! 100% Imunizado");
+                    strcpy(vacinado, "ParabÃ©ns! 100% Imunizado");
                     strcpy(contVacinas, "Vacinas Restantes: 0");
                 }
 
@@ -235,7 +235,7 @@ void TecladoEspecial(int key, int x, int y){
             }
 
         break;
-        case GLUT_KEY_HOME: // VOLTAR A POSIÇÃO INICIAL
+        case GLUT_KEY_HOME: // VOLTAR A POSIÃ‡ÃƒO INICIAL
             for(int i=0; i<4; i++){
                     for(int j=0; j<2;j++)
                         Pessoa[i][j] = PessoaAux[i][j];
